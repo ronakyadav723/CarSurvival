@@ -18,11 +18,11 @@ public class GameManager : MonoBehaviour
     public GameObject healthPrefab;
     public Transform playerTransform;
 
-    public int initialCars = 5;
+    public int initialCars ;
     public float survivalTime;
 
-    public int currentLives = 5;
-    public int maxLives = 5;
+    public int currentLives ;
+    public int maxLives ;
 
     public bool playerIsDead;
 
@@ -42,14 +42,12 @@ public class GameManager : MonoBehaviour
         highScoreText.text =
             "HighScore: " + PlayerPrefs.GetInt("HighScore", 0);
 
-        gameEndPanel.SetActive(false);
-
         for (int i = 0; i < initialCars; i++)
         {
             SpawnCars();
 
         }
-        for (int i = 0; i < initialCars / 4; i++)
+        for (int i = 0; i < initialCars / 3; i++)
         {
             SpawnLives();
         }
