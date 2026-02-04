@@ -25,10 +25,10 @@ public class NewMonoBehaviourScript : MonoBehaviour,IPointerDownHandler,IPointer
         {
             if (IsLeftButton)
             {
-                carcontroller.leftrightvalue=-1f;
+                carcontroller.leftrightvalue=-0.8f;
             }
             else {
-                carcontroller.leftrightvalue=+1f;
+                carcontroller.leftrightvalue=+0.8f;
             }
         }
         

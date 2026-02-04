@@ -712,7 +712,7 @@ Transform:
   m_GameObject: {fileID: 330585543}
   serializedVersion: 2
   m_LocalRotation: {x: -0.0019480423, y: 0, z: 0, w: 0.9999981}
-  m_LocalPosition: {x: 0, y: 13.4, z: -34}
+  m_LocalPosition: {x: 0, y: 13.53, z: -34}
   m_LocalScale: {x: 1, y: 1, z: 1}
   m_ConstrainProportionsScale: 0
   m_Children: []
@@ -794,11 +794,6 @@ MonoBehaviour:
       m_PostInfinity: 2
       m_RotationOrder: 4
   CustomBlends: {fileID: 0}
---- !u!1 &348585047 stripped
-GameObject:
-  m_CorrespondingSourceObject: {fileID: 6977761467390122368, guid: ef7914cbc41c53543a5d57c5b338e3ee, type: 3}
-  m_PrefabInstance: {fileID: 1789453966}
-  m_PrefabAsset: {fileID: 0}
 --- !u!1 &410087039
 GameObject:
   m_ObjectHideFlags: 0
@@ -955,20 +950,23 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 35a06ea193347e543a0a4d03d114e693, type: 3}
   m_Name: 
   m_EditorClassIdentifier: Assembly-CSharp::GameManager
+  playerTransform: {fileID: 6948587442849039784}
+  policeCarPrefab: {fileID: 1057143627}
+  startPoliceCount: 10
+  spawnRadius: 400
+  minSpawnDistance: 60
+  increaseEverySeconds: 30
+  maxPoliceLimit: 25
+  currentLives: 4
+  maxLives: 4
   livesUI: {fileID: 221026334}
   scoreText: {fileID: 294693545}
   highScoreText: {fileID: 1606069175}
   gameEndPanel: {fileID: 1110390352}
   leftControl: {fileID: 721436915}
   rightControl: {fileID: 1245497624}
-  policeCarPrefab: {fileID: 1057143627}
-  healthPrefab: {fileID: 348585047}
-  playerTransform: {fileID: 6948587442849039784}
-  initialCars: 200
-  survivalTime: 0
-  currentLives: 4
-  maxLives: 4
   playerIsDead: 0
+  survivalTime: 0
 --- !u!4 &475643771
 Transform:
   m_ObjectHideFlags: 0
@@ -1637,7 +1635,7 @@ Transform:
   m_GameObject: {fileID: 1440203156}
   serializedVersion: 2
   m_LocalRotation: {x: -0.0019480423, y: 0, z: 0, w: 0.9999981}
-  m_LocalPosition: {x: 0, y: 13.4, z: -34}
+  m_LocalPosition: {x: 0, y: 13.53, z: -34}
   m_LocalScale: {x: 1, y: 1, z: 1}
   m_ConstrainProportionsScale: 0
   m_Children: []
@@ -2296,8 +2294,16 @@ PrefabInstance:
     m_TransformParent: {fileID: 0}
     m_Modifications:
     - target: {fileID: 9048519020377047, guid: be60060fb22e5c74095e205428d02ee7, type: 3}
+      propertyPath: m_Mass
+      value: 1500
+      objectReference: {fileID: 0}
+    - target: {fileID: 9048519020377047, guid: be60060fb22e5c74095e205428d02ee7, type: 3}
       propertyPath: m_Constraints
-      value: 4
+      value: 64
+      objectReference: {fileID: 0}
+    - target: {fileID: 9048519020377047, guid: be60060fb22e5c74095e205428d02ee7, type: 3}
+      propertyPath: m_AngularDamping
+      value: 0.5
       objectReference: {fileID: 0}
     - target: {fileID: 195065307704106179, guid: be60060fb22e5c74095e205428d02ee7, type: 3}
       propertyPath: m_Name
@@ -2321,23 +2327,31 @@ PrefabInstance:
       objectReference: {fileID: 1141831194}
     - target: {fileID: 4448382966728256677, guid: be60060fb22e5c74095e205428d02ee7, type: 3}
       propertyPath: downforce
-      value: 80
+      value: 150
       objectReference: {fileID: 0}
     - target: {fileID: 4448382966728256677, guid: be60060fb22e5c74095e205428d02ee7, type: 3}
       propertyPath: speedText
       value: 
       objectReference: {fileID: 1141831194}
     - target: {fileID: 4448382966728256677, guid: be60060fb22e5c74095e205428d02ee7, type: 3}
+      propertyPath: turnSpeed
+      value: 50
+      objectReference: {fileID: 0}
+    - target: {fileID: 4448382966728256677, guid: be60060fb22e5c74095e205428d02ee7, type: 3}
       propertyPath: gameManager
       value: 
       objectReference: {fileID: 475643770}
+    - target: {fileID: 4448382966728256677, guid: be60060fb22e5c74095e205428d02ee7, type: 3}
+      propertyPath: maxSteeringAngle
+      value: 18
+      objectReference: {fileID: 0}
     - target: {fileID: 6605930832503339494, guid: be60060fb22e5c74095e205428d02ee7, type: 3}
       propertyPath: m_LocalPosition.x
       value: 0
       objectReference: {fileID: 0}
     - target: {fileID: 6605930832503339494, guid: be60060fb22e5c74095e205428d02ee7, type: 3}
       propertyPath: m_LocalPosition.y
-      value: 6
+      value: 6.13
       objectReference: {fileID: 0}
     - target: {fileID: 6605930832503339494, guid: be60060fb22e5c74095e205428d02ee7, type: 3}
       propertyPath: m_LocalPosition.z

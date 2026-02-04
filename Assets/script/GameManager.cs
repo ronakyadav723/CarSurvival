@@ -1,11 +1,24 @@
-using TMPro;
-using Unity.Mathematics;
 using UnityEngine;
+using System.Collections.Generic;
+using TMPro;
 using UnityEngine.SceneManagement;
 
 public class GameManager : MonoBehaviour
 {
     public static GameManager instance;
+
+    public Transform playerTransform;
+
+    public GameObject policeCarPrefab;
+    public int startPoliceCount = 10;
+    public float spawnRadius = 500f;
+    public float minSpawnDistance = 60f;
+    public float increaseEverySeconds = 30f;
+    public int maxPoliceLimit = 30;
+
+    [Header("Lives")]
+    public int currentLives;
+    public int maxLives;
     public LivesUI livesUI;
 
     public TMP_Text scoreText;
@@ -14,27 +27,18 @@ public class GameManager : MonoBehaviour
     public GameObject leftControl;
     public GameObject rightControl;
 
-    public GameObject policeCarPrefab;
-    public GameObject healthPrefab;
-    public Transform playerTransform;
-
-    public int initialCars ;
+    public bool playerIsDead;
     public float survivalTime;
 
-    public int currentLives ;
-    public int maxLives ;
+    List<AutoCarController> policeCars = new List<AutoCarController>();
 
-    public bool playerIsDead;
-
-    private void Awake()
+    void Awake()
     {
-        if (instance == null)
-            instance = this;
-        else
-            Destroy(gameObject);
+        if (instance == null) instance = this;
+        else Destroy(gameObject);
     }
 
-    private void Start()
+    void Start()
     {
         livesUI.Init(maxLives);
         livesUI.UpdateHearts(currentLives);
@@ -42,47 +46,92 @@ public class GameManager : MonoBehaviour
         highScoreText.text =
             "HighScore: " + PlayerPrefs.GetInt("HighScore", 0);
 
-        for (int i = 0; i < initialCars; i++)
-        {
-            SpawnCars();
-
-        }
-        for (int i = 0; i < initialCars / 3; i++)
-        {
-            SpawnLives();
-        }
-
-
-
+        for (int i = 0; i < startPoliceCount; i++)
+            SpawnPoliceCar();
     }
 
-    private void Update()
+    void Update()
     {
         if (playerIsDead) return;
 
         survivalTime += Time.deltaTime;
         scoreText.text = "Score: " + Mathf.FloorToInt(survivalTime * 10);
+
+        HandleDifficulty();
+        MaintainPoliceCars();
     }
 
-    public void SpawnCars()
+   
+
+    void HandleDifficulty()
     {
-        float x = UnityEngine.Random.Range(-5000f, 5000f);
-        float z = UnityEngine.Random.Range(-5000f, 5000f);
+        int desiredCount =
+            startPoliceCount + Mathf.FloorToInt(survivalTime / increaseEverySeconds);
 
-        Vector3 spawnPos = GetSafeSpawnPosition(x, z, 0f);
+        desiredCount = Mathf.Min(desiredCount, maxPoliceLimit);
 
-        GameObject car = Instantiate(policeCarPrefab, spawnPos, quaternion.identity);
-        car.GetComponent<AutoCarController>().target = playerTransform;
+        while (policeCars.Count < desiredCount)
+            SpawnPoliceCar();
     }
 
-    public void SpawnLives()
+    void MaintainPoliceCars()
     {
-        float x = UnityEngine.Random.Range(-5000f, 5000f);
-        float z = UnityEngine.Random.Range(-5000f, 5000f);
+        for (int i = policeCars.Count - 1; i >= 0; i--)
+        {
+            if (policeCars[i] == null)
+            {
+                policeCars.RemoveAt(i);
+                SpawnPoliceCar();
+                continue;
+            }
 
-        Vector3 spawnPos = GetSafeSpawnPosition(x, z, 1.15f);
-        GameObject life = Instantiate(healthPrefab, spawnPos, quaternion.identity);
+            float dist = Vector3.Distance(
+                playerTransform.position,
+                policeCars[i].transform.position
+            );
 
+            if (dist > spawnRadius)
+            {
+                Destroy(policeCars[i].gameObject);
+                policeCars.RemoveAt(i);
+                SpawnPoliceCar();
+            }
+        }
+    }
+
+    void SpawnPoliceCar()
+    {
+        Vector3 spawnPos = GetRandomPositionAroundPlayer();
+
+        GameObject carObj =
+            Instantiate(policeCarPrefab, spawnPos, Quaternion.identity);
+
+        AutoCarController car = carObj.GetComponent<AutoCarController>();
+        car.target = playerTransform;
+
+        policeCars.Add(car);
+    }
+
+    Vector3 GetRandomPositionAroundPlayer()
+    {
+        Vector2 circle =
+            Random.insideUnitCircle.normalized *
+            Random.Range(minSpawnDistance, spawnRadius);
+
+        Vector3 pos = playerTransform.position;
+        pos += new Vector3(circle.x, 0f, circle.y);
+
+        float terrainHeight =
+            Terrain.activeTerrain.SampleHeight(pos) +
+            Terrain.activeTerrain.transform.position.y;
+
+        pos.y = terrainHeight;
+        return pos;
+    }
+
+    public void NotifyPoliceDestroyed(AutoCarController car)
+    {
+        policeCars.Remove(car);
     }
 
     public void TakeDamage(int damage = 1)
@@ -90,13 +139,19 @@ public class GameManager : MonoBehaviour
         if (playerIsDead) return;
 
         currentLives -= damage;
-        UpdateLivesUI();
+        livesUI.UpdateHearts(currentLives);
 
         if (currentLives <= 0)
             EndGame();
     }
+    public void UpdateLivesUI()
+    {
+        if (livesUI != null)
+            livesUI.UpdateHearts(currentLives);
+        Debug.Log("Lives: " + currentLives);
+    }
 
-    private void EndGame()
+    void EndGame()
     {
         playerIsDead = true;
 
@@ -114,26 +169,8 @@ public class GameManager : MonoBehaviour
         rightControl.SetActive(false);
     }
 
-    public void UpdateLivesUI()
-    {
-        if (livesUI != null)
-            livesUI.UpdateHearts(currentLives);
-        Debug.Log("Lives: " + currentLives);
-    }
-
     public void PlayAgain()
     {
         SceneManager.LoadScene(0);
     }
-    Vector3 GetSafeSpawnPosition(float x, float z, float heightOffset)
-    {
-        float terrainHeight = Terrain.activeTerrain.SampleHeight(
-            new Vector3(x, 0, z)
-        );
-
-        terrainHeight += Terrain.activeTerrain.transform.position.y;
-
-        return new Vector3(x, terrainHeight + heightOffset, z);
-    }
-
 }

@@ -2,10 +2,7 @@ using UnityEngine;
 
 public class AutoCarController : MonoBehaviour
 {
-    [Header("Target")]
     public Transform target;
-
-    [Header("Wheels")]
     public WheelCollider frontLeftWheelCollider;
     public WheelCollider frontRightWheelCollider;
     public WheelCollider rearLeftWheelCollider;
@@ -25,36 +22,36 @@ public class AutoCarController : MonoBehaviour
     [Header("Effects")]
     public GameObject collisionEffectPrefab;
 
-    private Rigidbody rb;
-    private bool isDead;
+    Rigidbody rb;
+    bool isDead;
 
-    private void Awake()
+    void Awake()
     {
         rb = GetComponent<Rigidbody>();
         rb.centerOfMass = new Vector3(0, -1f, 0);
+        rb.constraints = RigidbodyConstraints.FreezeRotationZ;
     }
 
-    private void FixedUpdate()
+    void FixedUpdate()
     {
-        if (isDead || GameManager.instance.playerIsDead)
-            return;
+        if (isDead || GameManager.instance.playerIsDead) return;
 
         Drive();
         Steer();
-        UpdateWheelVisuals();
+        UpdateWheels();
         LimitSpeed();
         ApplyDownforce();
     }
 
-    private void Drive()
+    void Drive()
     {
         frontLeftWheelCollider.motorTorque = maxMotorTorque;
         frontRightWheelCollider.motorTorque = maxMotorTorque;
     }
 
-    private void Steer()
+    void Steer()
     {
-        if (target == null) return;
+        if (!target) return;
 
         Vector3 localTarget = transform.InverseTransformPoint(target.position);
         float steer = (localTarget.x / localTarget.magnitude) * maxSteeringAngle;
@@ -63,7 +60,7 @@ public class AutoCarController : MonoBehaviour
         frontRightWheelCollider.steerAngle = steer;
     }
 
-    private void UpdateWheelVisuals()
+    void UpdateWheels()
     {
         UpdateWheel(frontLeftWheelCollider, frontLeftWheelTransform);
         UpdateWheel(frontRightWheelCollider, frontRightWheelTransform);
@@ -71,59 +68,48 @@ public class AutoCarController : MonoBehaviour
         UpdateWheel(rearRightWheelCollider, rearRightWheelTransform);
     }
 
-    private void UpdateWheel(WheelCollider col, Transform tr)
+    void UpdateWheel(WheelCollider col, Transform tr)
     {
         col.GetWorldPose(out Vector3 pos, out Quaternion rot);
         tr.SetPositionAndRotation(pos, rot);
     }
 
-    private void LimitSpeed()
+    void LimitSpeed()
     {
         if (rb.linearVelocity.magnitude > maxSpeed)
-            rb.linearVelocity = rb.linearVelocity.normalized * maxSpeed;
+            rb.linearVelocity= rb.linearVelocity.normalized * maxSpeed;
     }
 
-    private void ApplyDownforce()
+    void ApplyDownforce()
     {
         rb.AddForce(-transform.up * downforce * rb.linearVelocity.magnitude);
     }
 
-
-    private void OnTriggerEnter(Collider other)
+    void OnTriggerEnter(Collider other)
     {
         if (isDead) return;
 
         if (other.CompareTag("Player"))
         {
             GameManager.instance.TakeDamage();
-            HandleDeath(spawnNewCar: true);
+            Die();
         }
     }
 
-    private void HandleDeath(bool spawnNewCar)
+    public void Die()
     {
+        if (isDead) return;
         isDead = true;
 
-        if (collisionEffectPrefab != null)
+        if (collisionEffectPrefab)
         {
-            GameObject fx = Instantiate(
-                collisionEffectPrefab,
-                transform.position,
-                Quaternion.identity
+            Destroy(
+                Instantiate(collisionEffectPrefab, transform.position, Quaternion.identity),
+                2f
             );
-            Destroy(fx, 2f);
         }
 
-        if (spawnNewCar)
-            GameManager.instance.SpawnCars();
-
-        // FULL shutdown
-        enabled = false;
-        rb.isKinematic = true;
-
-        foreach (Collider c in GetComponentsInChildren<Collider>())
-            c.enabled = false;
-
+        GameManager.instance.NotifyPoliceDestroyed(this);
         Destroy(gameObject);
     }
 }
