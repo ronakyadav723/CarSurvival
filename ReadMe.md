@@ -8,7 +8,8 @@ The game focuses on survival time, control, and avoiding obstacles in an endless
 -  Player-controlled car movement  
 -  Survival-time based scoring system  
 -  Life/health system  
-- Terrain-based environment  
+- Terrain-based environment
+- enemy cars spawn in 500m radius of player car only (at any time min 10 enemy cars that makes it engaging)
 -  Increasing difficulty over time  
 -  Simple and addictive gameplay
 
