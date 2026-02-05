@@ -1,11 +1,11 @@
 # CarSurvival
 
 ***CarSurvival*** is a Unity-based survival driving game where the player must stay alive as long as possible by preventing itself from other enemy cars.  
-The game focuses on survival time, control, and avoiding obstacles in an endless or progressively difficult environment.
+The game focuses on survival time, control, and avoiding obstacles in an endless and progressively difficult environment.
 
 ## 🎮 Game Features
 -  made for windows
--  Player-controlled car movement  
+-  Player-controlled car movement  (A->turn left & D->turn Right)
 -  Survival-time based scoring system  
 -  Life/health system  
 - Terrain-based environment
@@ -32,4 +32,4 @@ CarSurvival/
 - .gitattributes
 
 ## The Link for Executable File of game is ::
-https://drive.google.com/drive/folders/1Hn_Uu91H-zudysg55Ojibwea9arGCEH5?usp=sharing
+https://drive.google.com/drive/folders/1rwwE1REkqYoNKnQ5Uzco_YqoU4jsHVCC?usp=sharing
