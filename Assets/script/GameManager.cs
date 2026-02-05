@@ -16,7 +16,6 @@ public class GameManager : MonoBehaviour
     public float increaseEverySeconds = 30f;
     public int maxPoliceLimit = 30;
 
-    [Header("Lives")]
     public int currentLives;
     public int maxLives;
     public LivesUI livesUI;
@@ -168,7 +167,10 @@ public class GameManager : MonoBehaviour
         leftControl.SetActive(false);
         rightControl.SetActive(false);
     }
-
+    public void exitgame()
+    {
+        Application.Quit();
+    }
     public void PlayAgain()
     {
         SceneManager.LoadScene(0);

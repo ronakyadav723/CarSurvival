@@ -1,36 +1,22 @@
 using UnityEngine;
-using UnityEngine.EventSystems;
 
-public class NewMonoBehaviourScript : MonoBehaviour,IPointerDownHandler,IPointerUpHandler
+public class PlayerInput : MonoBehaviour
 {
     public CarController carcontroller;
-    public bool IsPressed;
-    public bool IsLeftButton;
-    public void OnPointerDown(PointerEventData eventData)
-    {
-       IsPressed=true;
-    }
 
-    public void OnPointerUp(PointerEventData eventData)
-    {
-       IsPressed=false;
-       carcontroller.leftrightvalue=0f;
-    }
-
-
-    // Update is called once per frame
     void FixedUpdate()
     {
-        if (IsPressed)
+        float input = 0f;
+
+        if (Input.GetKey(KeyCode.A))
         {
-            if (IsLeftButton)
-            {
-                carcontroller.leftrightvalue=-0.8f;
-            }
-            else {
-                carcontroller.leftrightvalue=+0.8f;
-            }
+            input = -0.8f;
         }
-        
+        else if (Input.GetKey(KeyCode.D))
+        {
+            input = 0.8f;
+        }
+
+        carcontroller.leftrightvalue = input;
     }
 }
