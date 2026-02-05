@@ -4,7 +4,7 @@
 The game focuses on survival time, control, and avoiding obstacles in an endless or progressively difficult environment.
 
 ## 🎮 Game Features
--  completely made for simulator(mobile phones)
+-  made for windows
 -  Player-controlled car movement  
 -  Survival-time based scoring system  
 -  Life/health system  
