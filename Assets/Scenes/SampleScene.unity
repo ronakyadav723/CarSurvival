@@ -2583,7 +2583,7 @@ PrefabInstance:
       objectReference: {fileID: 6948587442849039784}
     - target: {fileID: 5685139034500425973, guid: 15c376c25bdb387459716b82133f2c21, type: 3}
       propertyPath: maxSpeed
-      value: 70
+      value: 80
       objectReference: {fileID: 0}
     - target: {fileID: 5685139034500425973, guid: 15c376c25bdb387459716b82133f2c21, type: 3}
       propertyPath: downforce
