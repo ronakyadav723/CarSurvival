@@ -11,7 +11,7 @@ public class GameManager : MonoBehaviour
 
     public GameObject policeCarPrefab;
     public int startPoliceCount = 10;
-    public float spawnRadius = 500f;
+    public float spawnRadius = 400f;
     public float minSpawnDistance = 60f;
     public float increaseEverySeconds = 30f;
     public int maxPoliceLimit = 30;
@@ -124,7 +124,7 @@ public class GameManager : MonoBehaviour
             Terrain.activeTerrain.SampleHeight(pos) +
             Terrain.activeTerrain.transform.position.y;
 
-        pos.y = terrainHeight;
+        pos.y = terrainHeight+3;
         return pos;
     }
 
@@ -173,6 +173,6 @@ public class GameManager : MonoBehaviour
     }
     public void PlayAgain()
     {
-        SceneManager.LoadScene(0);
+        SceneManager.LoadScene(1);
     }
 }
