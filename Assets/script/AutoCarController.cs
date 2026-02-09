@@ -13,13 +13,13 @@ public class AutoCarController : MonoBehaviour
     public Transform rearLeftWheelTransform;
     public Transform rearRightWheelTransform;
 
-    [Header("Car Settings")]
+    
     public float maxMotorTorque = 1500f;
     public float maxSteeringAngle = 30f;
     public float maxSpeed = 110f;
     public float downforce = 100f;
 
-    [Header("Effects")]
+
     public GameObject collisionEffectPrefab;
 
     Rigidbody rb;
@@ -47,6 +47,8 @@ public class AutoCarController : MonoBehaviour
     {
         frontLeftWheelCollider.motorTorque = maxMotorTorque;
         frontRightWheelCollider.motorTorque = maxMotorTorque;
+        rearLeftWheelCollider.motorTorque = maxMotorTorque;
+        rearRightWheelCollider.motorTorque = maxMotorTorque;
     }
 
     void Steer()

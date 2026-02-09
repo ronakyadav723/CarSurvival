@@ -31,7 +31,6 @@ public class CarController : MonoBehaviour
         rb = GetComponent<Rigidbody>();
         rb.centerOfMass = new Vector3(0, -1f, 0);
 
-        // Arcade stability
         rb.constraints = RigidbodyConstraints.FreezeRotationZ;
     }
 
